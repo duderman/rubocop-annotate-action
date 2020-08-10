@@ -4,6 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -18,6 +19,7 @@ jobs:
       - run: yarn install
       - run: yarn run build
   test:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -32,6 +34,7 @@ jobs:
       - run: yarn install
       - run: yarn run test
   prettier:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -46,6 +49,7 @@ jobs:
       - run: yarn install
       - run: yarn run format-check
   lint:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
