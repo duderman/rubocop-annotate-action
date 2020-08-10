@@ -39,6 +39,7 @@
     "jest-mock-process": "^1.4.0",
     "js-yaml": "^3.14.0",
     "prettier": "2.0.5",
+    "temp-write": "^4.0.0",
     "ts-jest": "^24.3.0",
     "typescript": "^3.9.7"
   }
