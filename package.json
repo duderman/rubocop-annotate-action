@@ -1,6 +1,6 @@
 {
   "name": "rubocop-annotate-action",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "GitHub Action for creating annotations from RuboCop results",
   "main": "lib/main.js",
   "scripts": {
