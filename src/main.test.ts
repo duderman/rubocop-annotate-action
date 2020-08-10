@@ -61,3 +61,14 @@ test("sets error", () => {
     expect(stdout).toEqual("::error::File '/asd' doesn't exist\n")
   })
 })
+test("uses rubocop.json as a default path", () => {
+  const ip = path.join(__dirname, "..", "lib", "main.js")
+  const options: cp.ExecSyncOptions = {
+    env: {...process.env, INPUT_PATH: undefined}
+  }
+  cp.exec(`node ${ip}`, options, (error, stdout) => {
+    const fullpath = path.resolve("rubocop.json")
+    expect(error).not.toBeUndefined()
+    expect(stdout).toEqual(`::error::File '${fullpath}' doesn't exist\n`)
+  })
+})

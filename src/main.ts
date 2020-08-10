@@ -4,7 +4,7 @@ import parse from "./parser"
 
 async function run(): Promise<void> {
   try {
-    const path = core.getInput("path", {required: true})
+    const path = core.getInput("path") || "rubocop.json"
     const annotations: Annotation[] = await parse(path)
 
     for (const annotation of annotations) {

@@ -98,7 +98,7 @@ const parser_1 = __importDefault(__webpack_require__(806));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const path = core.getInput("path", { required: true });
+            const path = core.getInput("path") || "rubocop.json";
             const annotations = yield parser_1.default(path);
             for (const annotation of annotations) {
                 annotation.write();

@@ -7,7 +7,8 @@ branding:
 inputs:
   path:
     required: true
-    description: 'path to rubocop.json file'
+    description: path to RuboCop results JSON file
+    default: rubocop.json
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: node12
+  main: dist/index.js
