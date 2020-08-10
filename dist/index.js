@@ -89,12 +89,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
+const parser_1 = __importDefault(__webpack_require__(806));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            core.debug("im alive");
+            const path = core.getInput("path", { required: true });
+            const annotations = yield parser_1.default(path);
+            for (const annotation of annotations) {
+                annotation.write();
+            }
         }
         catch (error) {
             core.setFailed(error.message);
@@ -102,6 +110,28 @@ function run() {
     });
 }
 run();
+
+
+/***/ }),
+
+/***/ 234:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const command_1 = __webpack_require__(431);
+class Annotation {
+    constructor(message, properties = {}) {
+        this.level = "error";
+        this.message = message;
+        this.properties = properties;
+    }
+    write() {
+        command_1.issueCommand(this.level, this.properties, this.message);
+    }
+}
+exports.default = Annotation;
 
 
 /***/ }),
@@ -438,6 +468,93 @@ exports.getState = getState;
 /***/ (function(module) {
 
 module.exports = require("path");
+
+/***/ }),
+
+/***/ 747:
+/***/ (function(module) {
+
+module.exports = require("fs");
+
+/***/ }),
+
+/***/ 806:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const annotation_1 = __importDefault(__webpack_require__(234));
+const fs_1 = __webpack_require__(747);
+function isErrorNotFound(err) {
+    return err.code === "ENOENT";
+}
+function checkFileExistance(path) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield fs_1.promises.stat(path);
+        }
+        catch (err) {
+            if (isErrorNotFound(err)) {
+                throw new Error(`File '${path}' doesn't exist`);
+            }
+            throw err;
+        }
+    });
+}
+function read(path) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield checkFileExistance(path);
+        return yield fs_1.promises.readFile(path, "utf8");
+    });
+}
+function buildAnnotationFromOffense(file) {
+    return (offense) => {
+        const message = `[${offense.cop_name}] ${offense.message}`;
+        const properties = {
+            file,
+            col: offense.location.column,
+            line: offense.location.line
+        };
+        return new annotation_1.default(message, properties);
+    };
+}
+function parseOffenses(file, offenses) {
+    return offenses.map(buildAnnotationFromOffense(file));
+}
+function parseJSON(contents) {
+    try {
+        return JSON.parse(contents);
+    }
+    catch (err) {
+        throw new Error("Mailformed JSON");
+    }
+}
+function parse(filepath) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const contents = yield read(filepath);
+        const data = parseJSON(contents);
+        let annotations = [];
+        for (const file of data.files) {
+            annotations = annotations.concat(parseOffenses(file.path, file.offenses));
+        }
+        return annotations;
+    });
+}
+exports.default = parse;
+
 
 /***/ })
 
