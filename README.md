@@ -21,7 +21,7 @@ jobs:
       - run: gem install rubocop --no-doc
       - run: rubocop --format progress --format json --out rubocop.json
         id: rubocop
-      - uses: duderman/rubocop-annotate-action@v0.1
+      - uses: duderman/rubocop-annotate-action@v0.1.0
         with:
           path: rubocop.json
         if: ${{ failure() }}
