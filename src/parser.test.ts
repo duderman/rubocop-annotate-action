@@ -3,6 +3,7 @@ import Annotation from "./annotation"
 
 import tempWrite from "temp-write"
 import {promises as fs} from "fs"
+import {resolve} from "path"
 
 let mailformedFilePath: string
 let jsonFilePath: string
@@ -65,7 +66,8 @@ it("fails with error when file is missing", async () => {
   try {
     await parse("asd")
   } catch (err) {
-    expect(err).toEqual(new Error("File 'asd' doesn't exist"))
+    const fullPath = resolve("asd")
+    expect(err).toEqual(new Error(`File '${fullPath}' doesn't exist`))
   }
 })
 

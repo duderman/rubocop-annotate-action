@@ -1,5 +1,6 @@
 import Annotation, {AnnotationProperties} from "./annotation"
 import {promises as fs} from "fs"
+import {resolve} from "path"
 
 type RubocopJSON = {
   files: File[]
@@ -42,8 +43,9 @@ async function checkFileExistance(path: string): Promise<void> {
 }
 
 async function read(path: string): Promise<string> {
-  await checkFileExistance(path)
-  return await fs.readFile(path, "utf8")
+  const fullPath: string = resolve(path)
+  await checkFileExistance(fullPath)
+  return await fs.readFile(fullPath, "utf8")
 }
 
 type AnnotationBuilderFunction = (offense: Offense) => Annotation

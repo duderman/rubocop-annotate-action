@@ -54,10 +54,10 @@ test("main run", () => {
 test("sets error", () => {
   const ip = path.join(__dirname, "..", "lib", "main.js")
   const options: cp.ExecSyncOptions = {
-    env: {...process.env, INPUT_PATH: "asd"}
+    env: {...process.env, INPUT_PATH: "/asd"}
   }
   cp.exec(`node ${ip}`, options, (error, stdout) => {
     expect(error).not.toBeUndefined()
-    expect(stdout).toEqual("::error::Mailformed JSON\n")
+    expect(stdout).toEqual("::error::File '/asd' doesn't exist\n")
   })
 })

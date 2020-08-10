@@ -498,6 +498,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const annotation_1 = __importDefault(__webpack_require__(234));
 const fs_1 = __webpack_require__(747);
+const path_1 = __webpack_require__(622);
 function isErrorNotFound(err) {
     return err.code === "ENOENT";
 }
@@ -516,8 +517,9 @@ function checkFileExistance(path) {
 }
 function read(path) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield checkFileExistance(path);
-        return yield fs_1.promises.readFile(path, "utf8");
+        const fullPath = path_1.resolve(path);
+        yield checkFileExistance(fullPath);
+        return yield fs_1.promises.readFile(fullPath, "utf8");
     });
 }
 function buildAnnotationFromOffense(file) {
