@@ -24,7 +24,7 @@
   "author": "Nikolay Norkin <zduderman@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.2.4"
+    "@actions/core": "^1.2.7"
   },
   "devDependencies": {
     "@types/jest": "^26.0.9",
